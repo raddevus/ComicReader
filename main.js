@@ -12,9 +12,9 @@ oReq.addEventListener("error", transferFailed);
 function transferComplete(evt) {
   console.log("The transfer is complete.");
   console.log(evt);
-  // oReq.response contains the entire dilbert web page
+  // oReq.response contains the entire comic web page
   console.log(oReq.response);
-  // 1. write the response data to a hidden div
+  
   displayImage();
 }
 
@@ -23,46 +23,37 @@ function displayImage(){
   
   switch (comicName){
     case DILBERT:{
-      document.querySelector("#hidden").innerHTML = oReq.response;
-      targetUrl = document.querySelector(".img-comic").outerHTML;
-      var beginIdx = targetUrl.search('src=\"//') + 7;
-      targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
-      var endIdx = targetUrl.search("\"");
-      targetUrl = targetUrl.substring(0,endIdx);
-      console.log(targetUrl);
-      document.querySelector("#targetImg").src = "https://" + targetUrl;
-    //console.log(document.querySelector(".img-comic").src);
+      loadComicData(".img-comic","src=\"//","https://");
       break;
     }
     case PEARLS:{
-      document.querySelector("#hidden").innerHTML = oReq.response;
-      targetUrl = document.querySelector(".item-comic-image").outerHTML;
-      var beginIdx = targetUrl.search('src=\"') + 5;
-      targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
-      console.log("targetUrl : " + targetUrl);
-      var endIdx = targetUrl.search("\"");
-      targetUrl = targetUrl.substring(0,endIdx);
-      console.log(targetUrl);
-      document.querySelector("#targetImg").src = targetUrl;
+      loadComicData(".item-comic-image", 'src=\"');
       break;
 
     }
     case GARFIELD:{
-      document.querySelector("#hidden").innerHTML = oReq.response;
-      targetUrl = document.querySelector(".item-comic-image").outerHTML;
-      var beginIdx = targetUrl.search('src=\"') + 5;
-      targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
-      console.log("targetUrl : " + targetUrl);
-      var endIdx = targetUrl.search("\"");
-      targetUrl = targetUrl.substring(0,endIdx);
-      console.log(targetUrl);
-      document.querySelector("#targetImg").src = targetUrl;
+      loadComicData(".item-comic-image", 'src=\"');
       break;
     }
   }
-
   document.querySelector("#targetImg").width = clientWidth - 10;
-  
+}
+
+function loadComicData(comicSelector,searchText,urlPrefix){
+  if (urlPrefix === undefined || urlPrefix === null){
+    // insure urlPrefix is not undefined or null
+    urlPrefix = "";
+  }
+  document.querySelector("#hidden").innerHTML = oReq.response;
+  targetUrl = document.querySelector(comicSelector).outerHTML;
+  var beginIdx = targetUrl.search(searchText) + searchText.length;
+  targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
+  console.log("targetUrl : " + targetUrl);
+  var endIdx = targetUrl.search("\"");
+  targetUrl = targetUrl.substring(0,endIdx);
+  console.log(targetUrl);
+  document.querySelector("#targetImg").src = urlPrefix + targetUrl;
+
 }
 
 function resizeImage(){
