@@ -69,6 +69,7 @@ function initClientSize(){
 
 function initApp(){
   initClientSize();
+  initOriginalComicDates();
   comicName = localStorage.getItem("comicName");
   if (comicName === undefined || comicName === null){
     // first time and it has never been initialized, set to dilbert
@@ -91,10 +92,30 @@ function initApp(){
       break;
     }
     case CALVIN:{
-      document.querySelector("#cavlinRadio").checked = true;
+      document.querySelector("#calvinRadio").checked = true;
       initDate(CALVIN_DATE_ID);
       break;
     }
+  }
+}
+
+function initOriginalComicDates(){
+  // ################################
+  // This method initializes dates to first comic of each specific comic
+  // so user can begin reading first comic ever produced.  It only sets 
+  // dates if hte user hasn't already saved them in localstorage
+
+  if (localStorage.getItem(DILBERT_DATE_ID) === null){
+    localStorage.setItem(DILBERT_DATE_ID, "1989-04-15");
+  }
+  if (localStorage.getItem(PEARLS_DATE_ID) === null){
+    localStorage.setItem(PEARLS_DATE_ID, "2002-01-06");
+  }
+  if (localStorage.getItem(GARFIELD_DATE_ID) === null){
+    localStorage.setItem(GARFIELD_DATE_ID, "1978-06-18");
+  }
+  if (localStorage.getItem(CALVIN_DATE_ID) === null){
+    localStorage.setItem(CALVIN_DATE_ID, "1985-11-17");
   }
 }
 
