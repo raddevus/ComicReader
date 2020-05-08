@@ -7,6 +7,8 @@ const PEARLS = "pearls";
 const PEARLS_DATE_ID = "currentPearlsDate";
 const GARFIELD = "garfield";
 const GARFIELD_DATE_ID = "currentGarfieldDate";
+const CALVIN = "calvin";
+const CALVIN_DATE_ID = "currentCalvinDate";
 
 var comicName = DILBERT;
 
@@ -30,12 +32,8 @@ function displayImage(){
       loadComicData(".img-comic","src=\"//","https://");
       break;
     }
-    case PEARLS:{
-      loadComicData(".item-comic-image", 'src=\"');
-      break;
-
-    }
-    case GARFIELD:{
+    default:{
+      //PEARLS, GARFIELD, CALVIN & HOBBES,
       loadComicData(".item-comic-image", 'src=\"');
       break;
     }
@@ -92,6 +90,11 @@ function initApp(){
       initDate(GARFIELD_DATE_ID);
       break;
     }
+    case CALVIN:{
+      document.querySelector("#cavlinRadio").checked = true;
+      initDate(CALVIN_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -109,8 +112,11 @@ function saveCurrentRadio(){
       comicName = GARFIELD;
       initDate(GARFIELD_DATE_ID);
     }
+    if (document.querySelector("#calvinRadio").checked){
+      comicName = CALVIN;
+      initDate(CALVIN_DATE_ID);
+    }
     localStorage.setItem("comicName", comicName);
-    
 }
 
 function initDate(dateId){
@@ -138,26 +144,28 @@ function requestPage(){
       case DILBERT:{
         targetUrl = 'https://dilbert.com/' + comicDate.yyyymmdd();
         localStorage.setItem("currentDate", comicDate.yyyymmdd());
-        document.querySelector("#x-date").value = comicDate.yyyymmdd();
-        localStorage.setItem("comicName",comicName);
         break;
       }
       case PEARLS:{
         targetUrl = 'https://www.gocomics.com/pearlsbeforeswine/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentPearlsDate", comicDate.yyyymmdd());
-        document.querySelector("#x-date").value = comicDate.yyyymmdd();
-        localStorage.setItem("comicName", comicName);
         break;
       }
       case GARFIELD:{
         targetUrl = 'https://www.gocomics.com/garfield/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentGarfieldDate", comicDate.yyyymmdd());
-        document.querySelector("#x-date").value = comicDate.yyyymmdd();
-        localStorage.setItem("comicName", comicName);
+        break;
+      }
+      case CALVIN:{
+        targetUrl = 'https://www.gocomics.com/calvinandhobbes/' + comicDate.yyyymmdd('/');
+        localStorage.setItem("currentCalvinDate", comicDate.yyyymmdd());
         break;
       }
     }
-    
+
+    document.querySelector("#x-date").value = comicDate.yyyymmdd();
+    localStorage.setItem("comicName", comicName);
+  
     var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + targetUrl;
     console.log("requesting page");
     oReq.open("GET", url);    
