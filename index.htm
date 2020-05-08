@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Dilbert Reader</title>
+        <meta charset="utf-8">
+        <script src="main.js"></script>
+        <style>
+            #hidden{display:none;}
+        </style>
+	</head>
+	<body onload="initApp()" onresize="resizeImage()">
+        <input type="date" id="x-date" value="new Date()">
+        <input type="radio"  id="dilbertRadio" onchange="saveCurrentRadio()" name="radio-group" value="radio-value1" checked>
+        <label for="dilbertRadio">Dilbert</label>
+        <input type="radio" id="pearlsRadio" onchange="saveCurrentRadio()" name="radio-group" value="radio-value-2">
+        <label for="pearlsRadio">Pearls</label>
+        <input type="radio" id="garfieldRadio" onchange="saveCurrentRadio()" name="radio-group" value="radio-value-2">
+        <label for="garfieldRadio">Garfield</label>
+        <button onclick="requestPage()">Next Comic</button><br>
+        <p><a id="sourceUrl" href="" target="_blank"></a></p>
+        <p><img id="targetImg"></p>
+        <div id="hidden"></div>
+	</body>
+</html>
