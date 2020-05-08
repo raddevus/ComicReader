@@ -2,8 +2,12 @@ var oReq = new XMLHttpRequest();
 var clientWidth = 0;
 var isDilbert = false;
 const DILBERT = "dilbert";
+const DILBERT_DATE_ID = "currentDate";
 const PEARLS = "pearls";
+const PEARLS_DATE_ID = "currentPearlsDate";
 const GARFIELD = "garfield";
+const GARFIELD_DATE_ID = "currentGarfieldDate";
+
 var comicName = DILBERT;
 
 oReq.addEventListener("load", transferComplete);
@@ -75,52 +79,43 @@ function initApp(){
   switch (comicName){
     case DILBERT:{
       document.querySelector("#dilbertRadio").checked = true;
+      initDate(DILBERT_DATE_ID);
       break;
     }
     case PEARLS:{
       document.querySelector("#pearlsRadio").checked = true;
+      initDate(PEARLS_DATE_ID);
       break;
     }
     case GARFIELD:{
       document.querySelector("#garfieldRadio").checked = true;
+      initDate(GARFIELD_DATE_ID);
       break;
     }
   }
-  
-  initDate();
 }
 
 function saveCurrentRadio(){
     console.log("saveCurrentRadio...");
     if (document.querySelector("#dilbertRadio").checked){
       comicName = DILBERT;
+      initDate(DILBERT_DATE_ID);
     }
     if (document.querySelector("#pearlsRadio").checked){
       comicName = PEARLS;
+      initDate(PEARLS_DATE_ID);
     }
     if (document.querySelector("#garfieldRadio").checked){
       comicName = GARFIELD;
+      initDate(GARFIELD_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
-    initDate();
+    
 }
 
-function initDate(){
+function initDate(dateId){
   var currentDate = undefined;
-  switch (comicName){
-    case DILBERT:{
-      currentDate = localStorage.getItem("currentDate");
-      break;
-    }
-    case PEARLS:{
-      currentDate = localStorage.getItem("currentPearlsDate");
-      break;
-    }
-    case GARFIELD:{
-      currentDate = localStorage.getItem("currentGarfieldDate");
-      break;
-    }
-  }
+  currentDate = localStorage.getItem(dateId);
   
   if (currentDate !== undefined && currentDate !== null){
     document.querySelector("#x-date").value = currentDate;
