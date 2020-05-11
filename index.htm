@@ -21,6 +21,12 @@
         <button onclick="requestPage()">Next Comic</button><br>
         <p><a id="sourceUrl" href="" target="_blank"></a></p>
         <p><img id="targetImg"></p>
+        <p>
+            <label for="ownerId">OwnerId</label>
+            <input id="ownerId" type="text" maxlength="30" size="7" >
+            <button onclick="getComicDatesFromApi()">Load Dates</button>
+            <button onclick="saveComicDatesViaApi()">Save Dates</button>
+        </p>
         <div id="hidden"></div>
 	</body>
 </html>

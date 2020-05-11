@@ -1,9 +1,10 @@
 var oReq = new XMLHttpRequest();
 var apiReq = new XMLHttpRequest();
+var apiSaveReq = new XMLHttpRequest();
+
 var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
 var apiGetDates = "GetAllComicDates?OwnerId=";
 var apiSaveDates = "SaveAllComicDates?comics="
-var apiOwnerId = "rxdd3vus";
 var clientWidth = 0;
 var isDilbert = false;
 const DILBERT = "dilbert";
@@ -21,6 +22,8 @@ oReq.addEventListener("load", transferComplete);
 oReq.addEventListener("error", transferFailed);
 apiReq.addEventListener("load", apiReqComplete);
 apiReq.addEventListener("error", apiReqFailed);
+apiSaveReq.addEventListener("load", apiSaveReqComplete);
+apiSaveReq.addEventListener("error", apiSaveReqFailed);
 
 function transferComplete(evt) {
   console.log("The transfer is complete.");
@@ -34,6 +37,11 @@ function transferComplete(evt) {
 function apiReqComplete(evt){
   console.log("API request succeeded.");
   loadDatesFromApiData();
+}
+
+function apiSaveReqComplete(evt){
+    console.log("API Save Req succeeded.");
+    console.log(apiSaveReq.response);
 }
 
 function loadDatesFromApiData(){
@@ -81,46 +89,62 @@ function loadComicData(comicSelector,searchText,urlPrefix){
 }
 
 function getComicDatesFromApi(){
-    var url = apiTargetUrl + apiGetDates + apiOwnerId;
+    
+    var apiOwnerId = document.querySelector("#ownerId").value;
+    if (apiOwnerId == ""){
+      alert("Please provide a value for OwnerId.");
+      return;
+    }
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiGetDates + apiOwnerId;
+    var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId;
+    
     console.log("calling API");
-    apiReq.open("GET", url);
+    apiReq.open("GET", testUrl);
+    //apiReq.open("GET", prodUrl);
     apiReq.send();
 }
 
-function generateComicDateJson(){
+function generateComicDateJson(ownerId){
   var allComicDates = [];
   var ComicDateTemplate = {};
   //1.
   ComicDateTemplate.ComicDateName = "currentDate";
   ComicDateTemplate.DateString = localStorage.getItem("currentDate");
-  ComicDateTemplate.OwnerId = "jurassic";
+  ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
   //2. 
   ComicDateTemplate = {};
   ComicDateTemplate.ComicDateName = "currentPearlsDate";
   ComicDateTemplate.DateString = localStorage.getItem("currentPearlsDate");
-  ComicDateTemplate.OwnerId = "jurassic";
+  ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
   //3. 
   ComicDateTemplate = {};
   ComicDateTemplate.ComicDateName = "currentGarfieldDate";
   ComicDateTemplate.DateString = localStorage.getItem("currentGarfieldDate");
-  ComicDateTemplate.OwnerId = "jurassic";
+  ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
   //4.
   ComicDateTemplate = {};
   ComicDateTemplate.ComicDateName = "currentCalvinDate";
   ComicDateTemplate.DateString = localStorage.getItem("currentCalvinDate");
-  ComicDateTemplate.OwnerId = "jurassic";
+  ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
   return JSON.stringify(allComicDates);
 }
 
 function saveComicDatesViaApi(){
-    var comicDatesJson = generateComicDateJson();
-    var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
+    var apiOwnerId = document.querySelector("#ownerId").value;
+    if (apiOwnerId == ""){
+      alert("Please provide a value for OwnerId.");
+      return;
+    }
+    var comicDatesJson = generateComicDateJson(apiOwnerId);
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
+    var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
-    apiReq.open("GET", url);
+    // apiReq.open("GET", testUrl);
+    apiReq.open("GET", testUrl);
     apiReq.send();
 }
 
@@ -223,6 +247,10 @@ function transferFailed(evt) {
 }
 
 function apiReqFailed(evt){
+  console.log("Failed on API request.");
+}
+
+function apiSaveReqFailed(evt){
   console.log("Failed on API request.");
 }
 
