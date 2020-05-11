@@ -79,7 +79,7 @@ function loadComicData(comicSelector,searchText,urlPrefix){
 }
 
 function getComicDatesFromApi(){
-    var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiOwnerId;
+    var url = apiTargetUrl + apiOwnerId;
     console.log("calling API");
     apiReq.open("GET", url);
     apiReq.send();
