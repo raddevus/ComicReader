@@ -99,8 +99,8 @@ function getComicDatesFromApi(){
     var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId;
     
     console.log("calling API");
-    apiReq.open("GET", testUrl);
-    //apiReq.open("GET", prodUrl);
+    // apiReq.open("GET", testUrl);
+    apiReq.open("GET", prodUrl);
     apiReq.send();
 }
 
@@ -143,9 +143,9 @@ function saveComicDatesViaApi(){
     var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
     var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
-    // apiReq.open("GET", testUrl);
-    apiReq.open("GET", testUrl);
-    apiReq.send();
+    //apiSaveReq.open("GET", testUrl);
+    apiSaveReq.open("GET", prodUrl);
+    apiSaveReq.send();
 }
 
 function resizeImage(){
