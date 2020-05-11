@@ -1,4 +1,7 @@
 var oReq = new XMLHttpRequest();
+var apiReq = new XMLHttpRequest();
+var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/GetAllComicDates?OwnerId=";
+var apiOwnerId = "rxdd3vus";
 var clientWidth = 0;
 var isDilbert = false;
 const DILBERT = "dilbert";
@@ -14,6 +17,8 @@ var comicName = DILBERT;
 
 oReq.addEventListener("load", transferComplete);
 oReq.addEventListener("error", transferFailed);
+apiReq.addEventListener("load", apiReqComplete);
+apiReq.addEventListener("error", apiReqFailed);
 
 function transferComplete(evt) {
   console.log("The transfer is complete.");
@@ -22,6 +27,21 @@ function transferComplete(evt) {
   console.log(oReq.response);
   
   displayImage();
+}
+
+function apiReqComplete(evt){
+  console.log("API request succeeded.");
+  loadDatesFromApiData();
+}
+
+function loadDatesFromApiData(){
+    var comicDates = JSON.parse(apiReq.response);
+    console.log(comicDates);
+    for (var x=0; x < comicDates.length;x++){
+      console.log(comicDates[x]);
+      console.log(comicDates[x].ComicDateName + " : " + comicDates[x].DateString);
+      localStorage.setItem(comicDates[x].ComicDateName,comicDates[x].DateString);
+    }
 }
 
 function displayImage(){
@@ -56,6 +76,13 @@ function loadComicData(comicSelector,searchText,urlPrefix){
   console.log(targetUrl);
   document.querySelector("#targetImg").src = urlPrefix + targetUrl;
 
+}
+
+function getComicDatesFromApi(){
+    var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiOwnerId;
+    console.log("calling API");
+    apiReq.open("GET", url);
+    apiReq.send();
 }
 
 function resizeImage(){
@@ -156,6 +183,10 @@ function transferFailed(evt) {
   console.log("An error occurred while transferring the file.");
 }
 
+function apiReqFailed(evt){
+  console.log("Failed on API request.");
+}
+
 function requestPage(){
     var comicDate = new Date(document.querySelector("#x-date").value);
     
@@ -189,7 +220,7 @@ function requestPage(){
   
     var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + targetUrl;
     console.log("requesting page");
-    oReq.open("GET", url);    
+    oReq.open("GET", url);
     oReq.send();
     var sourceUrl = document.querySelector("#sourceUrl");
     sourceUrl.href = targetUrl;
@@ -198,6 +229,7 @@ function requestPage(){
   
     console.log("final url: " + url);
 }
+
 
 Date.prototype.yyyymmdd = function(delimiter) {
     if (delimiter === undefined){
