@@ -25,8 +25,8 @@
         <p>
             <label for="ownerId">OwnerId</label>
             <input id="ownerId" type="text" maxlength="30" size="7" >
-            <button onclick="getComicDatesFromApi()">Load Dates</button>
-            <button onclick="saveComicDatesViaApi()">Save Dates</button>
+            <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
+            <button id="saveComicDatesButton" onclick="saveComicDatesViaApi()" >Save Dates</button>
         </p>
         <div id="hidden"></div>
 	</body>

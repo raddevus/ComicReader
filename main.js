@@ -99,8 +99,8 @@ function getComicDatesFromApi(){
     var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId;
     
     console.log("calling API");
-    // apiReq.open("GET", testUrl);
-    apiReq.open("GET", prodUrl);
+    apiReq.open("GET", testUrl);
+    //apiReq.open("GET", prodUrl);
     apiReq.send();
 }
 
@@ -143,8 +143,8 @@ function saveComicDatesViaApi(){
     var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
     var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
-    //apiSaveReq.open("GET", testUrl);
-    apiSaveReq.open("GET", prodUrl);
+    apiSaveReq.open("GET", testUrl);
+    //apiSaveReq.open("GET", prodUrl);
     apiSaveReq.send();
 }
 
@@ -158,6 +158,10 @@ function initClientSize(){
 }
 
 function initApp(){
+  // have to add touch event on button otherwise the button does not work on mobile 
+  // FYI - mobile includes amazon Silk browser found on TV and pads.
+  document.querySelector("#loadComicDatesButton").addEventListener("touchstart",getComicDatesFromApi);
+  document.querySelector("#saveComicDatesButton").addEventListener("touchstart",saveComicDatesViaApi);
   initClientSize();
   initOriginalComicDates();
   comicName = localStorage.getItem("comicName");
