@@ -1,6 +1,8 @@
 var oReq = new XMLHttpRequest();
 var apiReq = new XMLHttpRequest();
-var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/GetAllComicDates?OwnerId=";
+var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
+var apiGetDates = "GetAllComicDates?OwnerId=";
+var apiSaveDates = "SaveAllComicDates?comics="
 var apiOwnerId = "rxdd3vus";
 var clientWidth = 0;
 var isDilbert = false;
@@ -79,7 +81,44 @@ function loadComicData(comicSelector,searchText,urlPrefix){
 }
 
 function getComicDatesFromApi(){
-    var url = apiTargetUrl + apiOwnerId;
+    var url = apiTargetUrl + apiGetDates + apiOwnerId;
+    console.log("calling API");
+    apiReq.open("GET", url);
+    apiReq.send();
+}
+
+function generateComicDateJson(){
+  var allComicDates = [];
+  var ComicDateTemplate = {};
+  //1.
+  ComicDateTemplate.ComicDateName = "currentDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentDate");
+  ComicDateTemplate.OwnerId = "jurassic";
+  allComicDates.push(ComicDateTemplate);
+  //2. 
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentPearlsDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentPearlsDate");
+  ComicDateTemplate.OwnerId = "jurassic";
+  allComicDates.push(ComicDateTemplate);
+  //3. 
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentGarfieldDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentGarfieldDate");
+  ComicDateTemplate.OwnerId = "jurassic";
+  allComicDates.push(ComicDateTemplate);
+  //4.
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentCalvinDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentCalvinDate");
+  ComicDateTemplate.OwnerId = "jurassic";
+  allComicDates.push(ComicDateTemplate);
+  return JSON.stringify(allComicDates);
+}
+
+function saveComicDatesViaApi(){
+    var comicDatesJson = generateComicDateJson();
+    var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
     apiReq.open("GET", url);
     apiReq.send();
