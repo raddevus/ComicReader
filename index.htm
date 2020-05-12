@@ -6,6 +6,7 @@
         <script src="main.js"></script>
         <style>
             #hidden{display:none;}
+            #message{color:blue;font-size:small;}
             body{padding: 5px 15px 5px 15px;}
         </style>
 	</head>
@@ -27,6 +28,7 @@
             <input id="ownerId" type="text" maxlength="30" size="7" >
             <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
             <button id="saveComicDatesButton" onclick="saveComicDatesViaApi()" >Save Dates</button>
+            <span id="message"></span>
         </p>
         <div id="hidden"></div>
 	</body>

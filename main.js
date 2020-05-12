@@ -42,6 +42,16 @@ function apiReqComplete(evt){
 function apiSaveReqComplete(evt){
     console.log("API Save Req succeeded.");
     console.log(apiSaveReq.response);
+    document.querySelector("#message").innerText = "Dates were successfully saved.";
+    startClearMessageTimer();
+}
+
+function startClearMessageTimer(){
+  setTimeout(clearMessage,4000);
+}
+
+function clearMessage(){
+  document.querySelector("#message").innerText = "";
 }
 
 function loadDatesFromApiData(){
@@ -52,6 +62,9 @@ function loadDatesFromApiData(){
       console.log(comicDates[x].ComicDateName + " : " + comicDates[x].DateString);
       localStorage.setItem(comicDates[x].ComicDateName,comicDates[x].DateString);
     }
+    saveCurrentRadio();
+    document.querySelector("#message").innerText = "Dates were successfully loaded.";
+    startClearMessageTimer();
 }
 
 function displayImage(){
