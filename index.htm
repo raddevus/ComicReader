@@ -30,6 +30,15 @@
             <button id="saveComicDatesButton" onclick="saveComicDatesViaApi()" >Save Dates</button>
             <span id="message"></span>
         </p>
+        <p>
+            <label for="favorites">Favorites</label>
+            <select id="favorites" onchange="navigateToFavorite()">
+                <option value=""></option>
+                <option value="http://raddev.us">raddev.us</option>
+                <option value="http://raddev.us/craftsw">raddev.us/craftsw</option>
+            </select>
+            <button id="addFavorite" onClick="addNewFavorite()">Add Fav</button>
+        </p>
         <div id="hidden"></div>
 	</body>
 </html>

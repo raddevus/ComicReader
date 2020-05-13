@@ -314,6 +314,22 @@ function requestPage(){
     console.log("final url: " + url);
 }
 
+function navigateToFavorite(){
+  var navUrl = document.querySelector("#favorites").value;
+  if (navUrl != ""){
+    window.open(navUrl, "_blank");
+  }
+}
+
+function addNewFavorite(){
+  var favControl =  document.querySelector("#favorites");
+  var currentHref = document.querySelector("#sourceUrl").href;
+  var opt = document.createElement('option');
+    opt.value = currentHref;
+    opt.innerHTML = currentHref;
+  favControl.appendChild(opt);
+}
+
 
 Date.prototype.yyyymmdd = function(delimiter) {
     if (delimiter === undefined){
