@@ -1,10 +1,16 @@
 var oReq = new XMLHttpRequest();
 var apiReq = new XMLHttpRequest();
 var apiSaveReq = new XMLHttpRequest();
+var apiSaveFavsReq = new XMLHttpRequest();
+var apiGetFavsReq = new XMLHttpRequest();
+var allFavs = [];
 
 var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
 var apiGetDates = "GetAllComicDates?OwnerId=";
-var apiSaveDates = "SaveAllComicDates?comics="
+var apiSaveDates = "SaveAllComicDates?comics=";
+var apiGetFavs = "GetAllComicFavorites?OwnerId=";
+var apiSaveFavs = "SaveAllComicFavorites?OwnerId=";
+var favQueryString = "&favs=";
 var clientWidth = 0;
 var isDilbert = false;
 const DILBERT = "dilbert";
@@ -24,6 +30,10 @@ apiReq.addEventListener("load", apiReqComplete);
 apiReq.addEventListener("error", apiReqFailed);
 apiSaveReq.addEventListener("load", apiSaveReqComplete);
 apiSaveReq.addEventListener("error", apiSaveReqFailed);
+apiSaveFavsReq.addEventListener("load", apiSaveFavsComplete);
+apiSaveFavsReq.addEventListener("error", apiSaveFavsFailed);
+apiGetFavsReq.addEventListener("load",apiGetFavsComplete);
+apiGetFavsReq.addEventListener("error", apiGetFavsFailed);
 
 function transferComplete(evt) {
   console.log("The transfer is complete.");
@@ -37,6 +47,7 @@ function transferComplete(evt) {
 function apiReqComplete(evt){
   console.log("API request succeeded.");
   loadDatesFromApiData();
+  getFavsFromApi();
 }
 
 function apiSaveReqComplete(evt){
@@ -44,6 +55,19 @@ function apiSaveReqComplete(evt){
     console.log(apiSaveReq.response);
     document.querySelector("#message").innerText = "Dates were successfully saved.";
     startClearMessageTimer();
+    saveFavsViaApi();
+}
+
+function apiSaveFavsComplete(evt){
+  console.log("save favs successfully completed.")
+  console.log(apiSaveFavsReq.response);
+}
+
+function apiGetFavsComplete(evt){
+  console.log("get favs successfully completed.")
+  console.log(apiGetFavsReq.response);
+  allFavs = JSON.parse(apiGetFavsReq.response);
+  populateFavsDropList();
 }
 
 function startClearMessageTimer(){
@@ -52,6 +76,27 @@ function startClearMessageTimer(){
 
 function clearMessage(){
   document.querySelector("#message").innerText = "";
+}
+
+function populateFavsDropList(){
+  document.querySelector("#favorites").options.length = 0;
+  var empty = {};
+  empty.ComicUrl = "";
+  empty.Note = "";
+  addNewFavorite(empty);
+  for (var x = 0;x < allFavs.length;x++){
+      addNewFavorite(allFavs[x]);
+  }
+}
+
+function addNewFavorite(fav){
+  var favControl =  document.querySelector("#favorites");
+  var currentHref = fav.ComicUrl;
+  console.log("fav text : " + currentHref + "~" + fav.Note);
+  var opt = document.createElement('option');
+    opt.value = currentHref + "~" + fav.Note;
+    opt.innerHTML = currentHref;
+  favControl.appendChild(opt);
 }
 
 function loadDatesFromApiData(){
@@ -115,6 +160,25 @@ function getComicDatesFromApi(){
     apiReq.open("GET", testUrl);
     //apiReq.open("GET", prodUrl);
     apiReq.send();
+}
+
+function getFavsFromApi(){
+  var ownerId = document.querySelector("#ownerId").value;
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiGetFavs + ownerId;
+    console.log(testUrl);
+    var prodUrl = apiTargetUrl + apiGetFavs + ownerId;
+    apiGetFavsReq.open("GET",testUrl);
+    apiGetFavsReq.send();
+}
+
+function saveFavsViaApi(){
+    var ownerId = document.querySelector("#ownerId").value;
+    var tempQueryString = "[{\"ComicUrl\":\"https://www.gocomics.com/calvinandhobbes/1986/03/25\",\"Created\":\"2020-05-25\",\"Note\":\"another test\"},{\"ComicUrl\":\"https://www.gocomics.com/calvinandhobbes/1986/03/22\",\"Note\":\"test this\"}]";
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + ownerId + favQueryString + tempQueryString;
+    console.log(testUrl);
+    var prodUrl = apiTargetUrl + apiSaveFavs + ownerId + favQueryString + tempQueryString;
+    apiSaveFavsReq.open("GET",testUrl);
+    apiSaveFavsReq.send();
 }
 
 function generateComicDateJson(ownerId){
@@ -271,6 +335,14 @@ function apiSaveReqFailed(evt){
   console.log("Failed on API request.");
 }
 
+function apiSaveFavsFailed(){
+  console.log("SaveFavs Failed on API request.");
+}
+
+function apiGetFavsFailed(){
+  console.log("GetFavs Failed on API request.");
+}
+
 function requestPage(){
     var comicDate = new Date(document.querySelector("#x-date").value);
     
@@ -315,21 +387,19 @@ function requestPage(){
 }
 
 function navigateToFavorite(){
-  var navUrl = document.querySelector("#favorites").value;
+  var navUrl = document.querySelector("#favorites").value.split("~")[0];
+  console.log(navUrl);
   if (navUrl != ""){
     window.open(navUrl, "_blank");
   }
 }
 
-function addNewFavorite(){
-  var favControl =  document.querySelector("#favorites");
-  var currentHref = document.querySelector("#sourceUrl").href;
-  var opt = document.createElement('option');
-    opt.value = currentHref;
-    opt.innerHTML = currentHref;
-  favControl.appendChild(opt);
+function updateFavNotes(){
+  var favNoteInput = document.querySelector("#favNotes");
+  var notes = document.querySelector("#favorites").value.split("~")[1];
+  favNoteInput.value = notes;
+  //favNoteInput.value
 }
-
 
 Date.prototype.yyyymmdd = function(delimiter) {
     if (delimiter === undefined){
