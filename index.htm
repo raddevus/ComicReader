@@ -34,13 +34,12 @@
             <label for="favorites">Favorites</label>
             <select id="favorites" onchange="updateFavNotes()">
                 <option value=""></option>
-                <option value="http://raddev.us">raddev.us</option>
-                <option value="http://raddev.us/craftsw">raddev.us/craftsw</option>
             </select>
             <button onclick="navigateToFavorite()">Load Favorite</button>
-            <button id="addFavorite" onClick="addNewFavorite()">Add Fav</button><br>
+            <br>
             <label for="favNotes">Fav Notes:</label>
             <input id="favNotes" type="text" size="30">
+            <button id="addFavorite" onclick="addNewFavorite()">Add Fav</button>
         </p>
         <div id="hidden"></div>
 	</body>

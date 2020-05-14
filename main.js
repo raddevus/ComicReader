@@ -83,20 +83,57 @@ function populateFavsDropList(){
   var empty = {};
   empty.ComicUrl = "";
   empty.Note = "";
-  addNewFavorite(empty);
+  insertFavorite(empty); // first one created as an empty selection
   for (var x = 0;x < allFavs.length;x++){
-      addNewFavorite(allFavs[x]);
+      insertFavorite(allFavs[x]);
   }
 }
 
-function addNewFavorite(fav){
-  var favControl =  document.querySelector("#favorites");
+function insertFavorite(fav){
+  var favControl = document.querySelector("#favorites");
   var currentHref = fav.ComicUrl;
   console.log("fav text : " + currentHref + "~" + fav.Note);
   var opt = document.createElement('option');
     opt.value = currentHref + "~" + fav.Note;
     opt.innerHTML = currentHref;
   favControl.appendChild(opt);
+}
+
+function addNewFavorite(){
+  var favNotesCtrl = document.querySelector("#favNotes");
+  var favDropList = document.querySelector("#favorites");
+  if (favDropList.value != "~"){
+    alert("To add a new favorite, please choose empty Fav from droplist and try again.");
+    return;
+  }
+  console.log("#1 ");
+  var newFav = {};
+  newFav.ComicUrl = document.querySelector("#sourceUrl").href;
+  if (document.querySelector("#sourceUrl").innerText == ""){
+    alert("Please load a comic and then try to save your favorite.")
+    return;
+  }
+  console.log(newFav.ComicUrl);
+  var favNoteInput = document.querySelector("#favNotes");
+  newFav.Note = favNoteInput.value;
+  newFav.Created = new Date().yyyymmdd();
+  if (newFav.Note == ""){
+    var result = confirm("Are you sure you want to save the fav without a note?\[OK] for Yes");
+    if (result){
+      insertFavorite(newFav);
+      allFavs.push(newFav);
+      saveFavsViaApi();
+    }
+    else{
+      return;
+    }
+  }
+  else{
+    insertFavorite(newFav);
+    allFavs.push(newFav);
+    saveFavsViaApi();
+  }
+
 }
 
 function loadDatesFromApiData(){
@@ -157,8 +194,8 @@ function getComicDatesFromApi(){
     var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId;
     
     console.log("calling API");
-    apiReq.open("GET", testUrl);
-    //apiReq.open("GET", prodUrl);
+    //apiReq.open("GET", testUrl);
+    apiReq.open("GET", prodUrl);
     apiReq.send();
 }
 
@@ -167,17 +204,19 @@ function getFavsFromApi(){
     var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiGetFavs + ownerId;
     console.log(testUrl);
     var prodUrl = apiTargetUrl + apiGetFavs + ownerId;
-    apiGetFavsReq.open("GET",testUrl);
+    //apiGetFavsReq.open("GET",testUrl);
+    apiGetFavsReq.open("GET",prodUrl);
     apiGetFavsReq.send();
 }
 
 function saveFavsViaApi(){
     var ownerId = document.querySelector("#ownerId").value;
-    var tempQueryString = "[{\"ComicUrl\":\"https://www.gocomics.com/calvinandhobbes/1986/03/25\",\"Created\":\"2020-05-25\",\"Note\":\"another test\"},{\"ComicUrl\":\"https://www.gocomics.com/calvinandhobbes/1986/03/22\",\"Note\":\"test this\"}]";
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + ownerId + favQueryString + tempQueryString;
+    var favsQueryStringVal = JSON.stringify(allFavs);
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + ownerId + favQueryString + favsQueryStringVal;
     console.log(testUrl);
-    var prodUrl = apiTargetUrl + apiSaveFavs + ownerId + favQueryString + tempQueryString;
-    apiSaveFavsReq.open("GET",testUrl);
+    var prodUrl = apiTargetUrl + apiSaveFavs + ownerId + favQueryString + favsQueryStringVal;
+    //apiSaveFavsReq.open("GET",testUrl);
+    apiSaveFavsReq.open("GET",prodUrl);
     apiSaveFavsReq.send();
 }
 
@@ -220,8 +259,8 @@ function saveComicDatesViaApi(){
     var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
     var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
-    apiSaveReq.open("GET", testUrl);
-    //apiSaveReq.open("GET", prodUrl);
+    //apiSaveReq.open("GET", testUrl);
+    apiSaveReq.open("GET", prodUrl);
     apiSaveReq.send();
 }
 
@@ -391,6 +430,9 @@ function navigateToFavorite(){
   console.log(navUrl);
   if (navUrl != ""){
     window.open(navUrl, "_blank");
+  }
+  else{
+    alert("Please select a favorite and try again.");
   }
 }
 
