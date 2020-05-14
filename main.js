@@ -67,6 +67,9 @@ function apiGetFavsComplete(evt){
   console.log("get favs successfully completed.")
   console.log(apiGetFavsReq.response);
   allFavs = JSON.parse(apiGetFavsReq.response);
+  if (allFavs == ""){
+    allFavs = [];
+  }
   populateFavsDropList();
 }
 
@@ -102,7 +105,7 @@ function insertFavorite(fav){
 function addNewFavorite(){
   var favNotesCtrl = document.querySelector("#favNotes");
   var favDropList = document.querySelector("#favorites");
-  if (favDropList.value != "~"){
+  if (favDropList.value != "~" && favDropList.value != ""){
     alert("To add a new favorite, please choose empty Fav from droplist and try again.");
     return;
   }
@@ -123,6 +126,8 @@ function addNewFavorite(){
       insertFavorite(newFav);
       allFavs.push(newFav);
       saveFavsViaApi();
+      // empty out the text since there was a successful add
+      favNoteInput.value = "";
     }
     else{
       return;
@@ -132,6 +137,8 @@ function addNewFavorite(){
     insertFavorite(newFav);
     allFavs.push(newFav);
     saveFavsViaApi();
+    // empty out the text since there was a successful add
+    favNoteInput.value = "";
   }
 
 }
