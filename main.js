@@ -86,6 +86,7 @@ function populateFavsDropList(){
   var empty = {};
   empty.ComicUrl = "";
   empty.Note = "";
+  empty.ImageUrl= "";
   insertFavorite(empty); // first one created as an empty selection
   for (var x = 0;x < allFavs.length;x++){
       insertFavorite(allFavs[x]);
@@ -97,7 +98,7 @@ function insertFavorite(fav){
   var currentHref = fav.ComicUrl;
   console.log("fav text : " + currentHref + "~" + atob(fav.Note));
   var opt = document.createElement('option');
-    opt.value = currentHref + "~" + atob(fav.Note);
+    opt.value = currentHref + "~" + atob(fav.Note) + "~" + fav.ImageUrl;
     opt.innerHTML = atob(fav.Note);
   favControl.appendChild(opt);
 }
@@ -105,7 +106,7 @@ function insertFavorite(fav){
 function addNewFavorite(){
   var favNotesCtrl = document.querySelector("#favNotes");
   var favDropList = document.querySelector("#favorites");
-  if (favDropList.value != "~" && favDropList.value != ""){
+  if (favDropList.value != "~~"){
     alert("To add a new favorite, please choose empty Fav from droplist and try again.");
     return;
   }
@@ -457,7 +458,10 @@ function updateFavNotes(){
   var favNoteInput = document.querySelector("#favNotes");
   var notes = document.querySelector("#favorites").value.split("~")[1];
   favNoteInput.value = notes;
-  //favNoteInput.value
+  
+  if (notes !== "" && notes !== undefined){
+    document.querySelector("#targetImg").src = document.querySelector("#favorites").value.split("~")[2];
+  }
 }
 
 Date.prototype.yyyymmdd = function(delimiter) {
