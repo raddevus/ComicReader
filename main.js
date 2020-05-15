@@ -120,6 +120,7 @@ function addNewFavorite(){
   var favNoteInput = document.querySelector("#favNotes");
   newFav.Note = btoa(favNoteInput.value);
   newFav.Created = new Date().yyyymmdd();
+  newFav.ImageUrl = document.querySelector("#targetImg").src;
   if (newFav.Note == ""){
     var result = confirm("Are you sure you want to save the fav without a note?\[OK] for Yes");
     if (result){
@@ -226,7 +227,8 @@ function saveFavsViaApi(){
   var favsQueryStringVal = JSON.stringify(allFavs);
   var prodUrl = apiTargetUrl + apiSaveFavs;
   console.log(prodUrl);
-  var params = apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
+  // ### FIRST PARAM CANNOT HAVE A QUESTION MARK IN FRONT OF IT!  #########
+  var params = "ownerId=" + ownerId + favQueryString + favsQueryStringVal;
   console.log("params : " + params);
   var allData = "favs=" + favsQueryStringVal;
   //apiSaveFavsReq.open("GET",testUrl);
