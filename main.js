@@ -95,9 +95,9 @@ function populateFavsDropList(){
 function insertFavorite(fav){
   var favControl = document.querySelector("#favorites");
   var currentHref = fav.ComicUrl;
-  console.log("fav text : " + currentHref + "~" + fav.Note);
+  console.log("fav text : " + currentHref + "~" + atob(fav.Note));
   var opt = document.createElement('option');
-    opt.value = currentHref + "~" + fav.Note;
+    opt.value = currentHref + "~" + atob(fav.Note);
     opt.innerHTML = currentHref;
   favControl.appendChild(opt);
 }
@@ -118,7 +118,7 @@ function addNewFavorite(){
   }
   console.log(newFav.ComicUrl);
   var favNoteInput = document.querySelector("#favNotes");
-  newFav.Note = favNoteInput.value;
+  newFav.Note = btoa(favNoteInput.value);
   newFav.Created = new Date().yyyymmdd();
   if (newFav.Note == ""){
     var result = confirm("Are you sure you want to save the fav without a note?\[OK] for Yes");
@@ -135,6 +135,11 @@ function addNewFavorite(){
   }
   else{
     insertFavorite(newFav);
+    console.log("allFavs - ");
+    console.log(allFavs);
+    if (allFavs.error !== undefined){
+      allFavs = [];
+    }
     allFavs.push(newFav);
     saveFavsViaApi();
     // empty out the text since there was a successful add
