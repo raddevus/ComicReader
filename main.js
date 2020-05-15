@@ -6,10 +6,11 @@ var apiGetFavsReq = new XMLHttpRequest();
 var allFavs = [];
 
 var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
-var apiGetDates = "GetAllComicDates?OwnerId=";
+var apiOwnerId = "?OwnerId="
+var apiGetDates = "GetAllComicDates";
 var apiSaveDates = "SaveAllComicDates?comics=";
-var apiGetFavs = "GetAllComicFavorites?OwnerId=";
-var apiSaveFavs = "SaveAllComicFavorites?OwnerId=";
+var apiGetFavs = "GetAllComicFavorites";
+var apiSaveFavs = "SaveAllComicFavorites";
 var favQueryString = "&favs=";
 var clientWidth = 0;
 var isDilbert = false;
@@ -196,13 +197,13 @@ function loadComicData(comicSelector,searchText,urlPrefix){
 
 function getComicDatesFromApi(){
     
-    var apiOwnerId = document.querySelector("#ownerId").value;
-    if (apiOwnerId == ""){
+    var ownerId = document.querySelector("#ownerId").value;
+    if (ownerId == ""){
       alert("Please provide a value for OwnerId.");
       return;
     }
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiGetDates + apiOwnerId;
-    var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId;
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiGetDates + apiOwnerId + ownerId;
+    var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId + ownerId;
     
     console.log("calling API");
     //apiReq.open("GET", testUrl);
@@ -212,9 +213,9 @@ function getComicDatesFromApi(){
 
 function getFavsFromApi(){
   var ownerId = document.querySelector("#ownerId").value;
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiGetFavs + ownerId;
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiGetFavs + apiOwnerId + ownerId;
     console.log(testUrl);
-    var prodUrl = apiTargetUrl + apiGetFavs + ownerId;
+    var prodUrl = apiTargetUrl + apiGetFavs + apiOwnerId + ownerId;
     //apiGetFavsReq.open("GET",testUrl);
     apiGetFavsReq.open("GET",prodUrl);
     apiGetFavsReq.send();
@@ -223,9 +224,9 @@ function getFavsFromApi(){
 function saveFavsViaApi(){
     var ownerId = document.querySelector("#ownerId").value;
     var favsQueryStringVal = JSON.stringify(allFavs);
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + ownerId + favQueryString + favsQueryStringVal;
+    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
     console.log(testUrl);
-    var prodUrl = apiTargetUrl + apiSaveFavs + ownerId + favQueryString + favsQueryStringVal;
+    var prodUrl = apiTargetUrl + apiSaveFavs + apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
     //apiSaveFavsReq.open("GET",testUrl);
     apiSaveFavsReq.open("GET",prodUrl);
     apiSaveFavsReq.send();
