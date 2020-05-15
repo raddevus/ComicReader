@@ -55,7 +55,6 @@ function apiSaveReqComplete(evt){
     console.log(apiSaveReq.response);
     document.querySelector("#message").innerText = "Dates were successfully saved.";
     startClearMessageTimer();
-    saveFavsViaApi();
 }
 
 function apiSaveFavsComplete(evt){
