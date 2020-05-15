@@ -98,7 +98,7 @@ function insertFavorite(fav){
   console.log("fav text : " + currentHref + "~" + atob(fav.Note));
   var opt = document.createElement('option');
     opt.value = currentHref + "~" + atob(fav.Note);
-    opt.innerHTML = currentHref;
+    opt.innerHTML = atob(fav.Note);
   favControl.appendChild(opt);
 }
 
@@ -222,14 +222,17 @@ function getFavsFromApi(){
 }
 
 function saveFavsViaApi(){
-    var ownerId = document.querySelector("#ownerId").value;
-    var favsQueryStringVal = JSON.stringify(allFavs);
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiSaveFavs + apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
-    console.log(testUrl);
-    var prodUrl = apiTargetUrl + apiSaveFavs + apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
-    //apiSaveFavsReq.open("GET",testUrl);
-    apiSaveFavsReq.open("GET",prodUrl);
-    apiSaveFavsReq.send();
+  var ownerId = document.querySelector("#ownerId").value;
+  var favsQueryStringVal = JSON.stringify(allFavs);
+  var prodUrl = apiTargetUrl + apiSaveFavs;
+  console.log(prodUrl);
+  var params = apiOwnerId + ownerId + favQueryString + favsQueryStringVal;
+  console.log("params : " + params);
+  var allData = "favs=" + favsQueryStringVal;
+  //apiSaveFavsReq.open("GET",testUrl);
+  apiSaveFavsReq.open("POST",prodUrl);
+  apiSaveFavsReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  apiSaveFavsReq.send(params);
 }
 
 function generateComicDateJson(ownerId){
