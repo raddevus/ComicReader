@@ -168,7 +168,7 @@ function displayImage(){
   
   switch (comicName){
     case DILBERT:{
-      loadComicData(".img-comic","src=\"//","https://");
+      loadComicData(".img-comic", 'src=\"');
       break;
     }
     default:{
