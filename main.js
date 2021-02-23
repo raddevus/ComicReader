@@ -22,6 +22,8 @@ const GARFIELD = "garfield";
 const GARFIELD_DATE_ID = "currentGarfieldDate";
 const CALVIN = "calvin";
 const CALVIN_DATE_ID = "currentCalvinDate";
+const WUMO = "wumo";
+const WUMO_DATE_ID = "currentWumoDate";
 
 var comicName = DILBERT;
 
@@ -172,7 +174,7 @@ function displayImage(){
       break;
     }
     default:{
-      //PEARLS, GARFIELD, CALVIN & HOBBES,
+      //PEARLS, GARFIELD, CALVIN & HOBBES, WUMO
       loadComicData(".item-comic-image", 'src=\"');
       break;
     }
@@ -264,6 +266,13 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate.DateString = localStorage.getItem("currentCalvinDate");
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
+  //5.
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentWumoDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentWumoDate");
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
   return JSON.stringify(allComicDates);
 }
 
@@ -324,6 +333,11 @@ function initApp(){
       initDate(CALVIN_DATE_ID);
       break;
     }
+    case WUMO:{
+      document.querySelector("#wumoRadio").checked = true;
+      initDate(WUMO_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -345,6 +359,9 @@ function initOriginalComicDates(){
   if (localStorage.getItem(CALVIN_DATE_ID) === null){
     localStorage.setItem(CALVIN_DATE_ID, "1985-11-17");
   }
+  if (localStorage.getItem(WUMO_DATE_ID) === null){
+    localStorage.setItem(WUMO_DATE_ID, "2013-11-03");
+  }
 }
 
 function saveCurrentRadio(){
@@ -364,6 +381,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#calvinRadio").checked){
       comicName = CALVIN;
       initDate(CALVIN_DATE_ID);
+    }
+    if (document.querySelector("#wumoRadio").checked){
+      comicName = WUMO;
+      initDate(WUMO_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -424,6 +445,11 @@ function requestPage(){
       case CALVIN:{
         targetUrl = 'https://www.gocomics.com/calvinandhobbes/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentCalvinDate", comicDate.yyyymmdd());
+        break;
+      }
+      case WUMO:{
+        targetUrl = 'https://www.gocomics.com/wumo/' + comicDate.yyyymmdd('/');
+        localStorage.setItem("currentWumoDate", comicDate.yyyymmdd());
         break;
       }
     }
