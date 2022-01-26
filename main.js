@@ -206,7 +206,7 @@ function getComicDatesFromApi(){
       alert("Please provide a value for OwnerId.");
       return;
     }
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiGetDates + apiOwnerId + ownerId;
+    var testUrl = 'https://newlibre.com/grabit/home/getRemote?url=' + apiTargetUrl + apiGetDates + apiOwnerId + ownerId;
     var prodUrl = apiTargetUrl + apiGetDates + apiOwnerId + ownerId;
     
     console.log("calling API");
@@ -217,7 +217,7 @@ function getComicDatesFromApi(){
 
 function getFavsFromApi(){
   var ownerId = document.querySelector("#ownerId").value;
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx?url=' + apiTargetUrl + apiGetFavs + apiOwnerId + ownerId;
+    var testUrl = 'https://newlibre.com/grabit/home/getRemote?url=' + apiTargetUrl + apiGetFavs + apiOwnerId + ownerId;
     console.log(testUrl);
     var prodUrl = apiTargetUrl + apiGetFavs + apiOwnerId + ownerId;
     //apiGetFavsReq.open("GET",testUrl);
@@ -283,7 +283,7 @@ function saveComicDatesViaApi(){
       return;
     }
     var comicDatesJson = generateComicDateJson(apiOwnerId);
-    var testUrl = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
+    var testUrl = 'https://newlibre.com/grabit/home/getRemote?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
     var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
     console.log("calling API");
     //apiSaveReq.open("GET", testUrl);
@@ -428,7 +428,7 @@ function requestPage(){
     var targetUrl = null;
     switch (comicName){
       case DILBERT:{
-        targetUrl = 'https://dilbert.com/' + comicDate.yyyymmdd();
+        targetUrl = 'https://dilbert.com/strip/' + comicDate.yyyymmdd();
         localStorage.setItem("currentDate", comicDate.yyyymmdd());
         break;
       }
@@ -456,8 +456,9 @@ function requestPage(){
 
     document.querySelector("#x-date").value = comicDate.yyyymmdd();
     localStorage.setItem("comicName", comicName);
-  
-    var url = 'http://uncoveryourlife.com/temp/GrabIt.aspx/?url=' + targetUrl;
+    
+    //var url = 'https://newlibre.com/grabit/home/getRemote?url=' + targetUrl;
+    var url = 'https://newlibre.com/grabit/Home/GetRemote?url=' + targetUrl;
     console.log("requesting page");
     oReq.open("GET", url);
     oReq.send();
