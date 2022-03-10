@@ -5,6 +5,8 @@ var apiSaveFavsReq = new XMLHttpRequest();
 var apiGetFavsReq = new XMLHttpRequest();
 var allFavs = [];
 
+let globalPageData;
+
 var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
 var apiOwnerId = "?OwnerId="
 var apiGetDates = "GetAllComicDates";
@@ -24,12 +26,13 @@ const CALVIN = "calvin";
 const CALVIN_DATE_ID = "currentCalvinDate";
 const WUMO = "wumo";
 const WUMO_DATE_ID = "currentWumoDate";
+const BREWSTER = "brewster";
+const BREWSTER_DATE_ID = "currentBrewsterDate"
 
 var comicName = DILBERT;
 
-oReq.addEventListener("load", transferComplete);
+
 oReq.addEventListener("error", transferFailed);
-apiReq.addEventListener("load", apiReqComplete);
 apiReq.addEventListener("error", apiReqFailed);
 apiSaveReq.addEventListener("load", apiSaveReqComplete);
 apiSaveReq.addEventListener("error", apiSaveReqFailed);
@@ -38,20 +41,6 @@ apiSaveFavsReq.addEventListener("error", apiSaveFavsFailed);
 apiGetFavsReq.addEventListener("load",apiGetFavsComplete);
 apiGetFavsReq.addEventListener("error", apiGetFavsFailed);
 
-function transferComplete(evt) {
-  console.log("The transfer is complete.");
-  console.log(evt);
-  // oReq.response contains the entire comic web page
-  console.log(oReq.response);
-  
-  displayImage();
-}
-
-function apiReqComplete(evt){
-  console.log("API request succeeded.");
-  loadDatesFromApiData();
-  getFavsFromApi();
-}
 
 function apiSaveReqComplete(evt){
     console.log("API Save Req succeeded.");
@@ -152,8 +141,8 @@ function addNewFavorite(){
 
 }
 
-function loadDatesFromApiData(){
-    var comicDates = JSON.parse(apiReq.response);
+function loadDatesFromApiData(data){
+    var comicDates = data;
     console.log(comicDates);
     for (var x=0; x < comicDates.length;x++){
       console.log(comicDates[x]);
@@ -187,7 +176,7 @@ function loadComicData(comicSelector,searchText,urlPrefix){
     // insure urlPrefix is not undefined or null
     urlPrefix = "";
   }
-  document.querySelector("#hidden").innerHTML = oReq.response;
+  document.querySelector("#hidden").innerHTML = globalPageData;
   targetUrl = document.querySelector(comicSelector).outerHTML;
   var beginIdx = targetUrl.search(searchText) + searchText.length;
   targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
@@ -211,8 +200,18 @@ function getComicDatesFromApi(){
     
     console.log("calling API");
     //apiReq.open("GET", testUrl);
-    apiReq.open("GET", prodUrl);
-    apiReq.send();
+    
+    fetch(prodUrl)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        console.log("#### got Comic Dates! ####")
+        loadDatesFromApiData(data);
+        getFavsFromApi();
+      });
+
+    // apiReq.open("GET", prodUrl);
+    // apiReq.send();
 }
 
 function getFavsFromApi(){
@@ -270,6 +269,13 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate = {};
   ComicDateTemplate.ComicDateName = "currentWumoDate";
   ComicDateTemplate.DateString = localStorage.getItem("currentWumoDate");
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
+  //6.
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentBrewsterDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentBrewsterDate");
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
 
@@ -338,6 +344,11 @@ function initApp(){
       initDate(WUMO_DATE_ID);
       break;
     }
+    case BREWSTER:{
+      document.querySelector("#brewsterRadio").checked = true;
+      initDate(BREWSTER_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -362,6 +373,9 @@ function initOriginalComicDates(){
   if (localStorage.getItem(WUMO_DATE_ID) === null){
     localStorage.setItem(WUMO_DATE_ID, "2013-11-03");
   }
+  if (localStorage.getItem(BREWSTER_DATE_ID) === null){
+    localStorage.setItem(BREWSTER_DATE_ID, "2004-08-01");
+  }
 }
 
 function saveCurrentRadio(){
@@ -385,6 +399,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#wumoRadio").checked){
       comicName = WUMO;
       initDate(WUMO_DATE_ID);
+    }
+    if (document.querySelector("#brewsterRadio").checked){
+      comicName = BREWSTER;
+      initDate(BREWSTER_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -452,6 +470,11 @@ function requestPage(){
         localStorage.setItem("currentWumoDate", comicDate.yyyymmdd());
         break;
       }
+      case BREWSTER:{
+        targetUrl = 'https://www.gocomics.com/brewsterrockit/' + comicDate.yyyymmdd('/');
+        localStorage.setItem("currentBrewsterDate", comicDate.yyyymmdd());
+        break;
+      }
     }
 
     document.querySelector("#x-date").value = comicDate.yyyymmdd();
@@ -460,8 +483,17 @@ function requestPage(){
     //var url = 'https://newlibre.com/grabit/home/getRemote?url=' + targetUrl;
     var url = 'https://newlibre.com/grabit/Home/GetRemote?url=' + targetUrl;
     console.log("requesting page");
-    oReq.open("GET", url);
-    oReq.send();
+
+    fetch(url)
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+        console.log("#### yep, it got it ####")
+        globalPageData = data;
+        displayImage();
+      });
+    //oReq.open("GET", url);
+    //oReq.send();
     var sourceUrl = document.querySelector("#sourceUrl");
     sourceUrl.href = targetUrl;
     sourceUrl.innerText = targetUrl + "^";
