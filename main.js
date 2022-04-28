@@ -481,10 +481,15 @@ function requestPage(){
     localStorage.setItem("comicName", comicName);
     
     //var url = 'https://newlibre.com/grabit/home/getRemote?url=' + targetUrl;
-    var url = 'https://newlibre.com/grabit/Home/GetRemote?url=' + targetUrl;
+    var comicData = new FormData();
+    comicData.append("url",targetUrl);
+    var url = "https://newlibre.com/grabit/Home/getRemote"; //?url=' + targetUrl;
     console.log("requesting page");
 
-    fetch(url)
+    fetch(url,{
+            method: 'POST',
+            body: comicData,
+        })
       .then(response => response.text())
       .then(data => {
         console.log(data);
