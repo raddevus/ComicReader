@@ -10,7 +10,7 @@ let globalPageData;
 var apiTargetUrl = "https://newlibre.com/LibreApi/ComicDate/"
 var apiOwnerId = "?OwnerId="
 var apiGetDates = "GetAllComicDates";
-var apiSaveDates = "SaveAllComicDates?comics=";
+var apiSaveDates = "SaveAllComicDatesPost";
 var apiGetFavs = "GetAllComicFavorites";
 var apiSaveFavs = "SaveAllComicFavorites";
 var favQueryString = "&favs=";
@@ -283,18 +283,27 @@ function generateComicDateJson(ownerId){
 }
 
 function saveComicDatesViaApi(){
-    var apiOwnerId = document.querySelector("#ownerId").value;
-    if (apiOwnerId == ""){
-      alert("Please provide a value for OwnerId.");
-      return;
-    }
-    var comicDatesJson = generateComicDateJson(apiOwnerId);
-    var testUrl = 'https://newlibre.com/grabit/home/getRemote?url=' + apiTargetUrl + apiSaveDates + comicDatesJson;
-    var prodUrl = apiTargetUrl + apiSaveDates + comicDatesJson;
-    console.log("calling API");
-    //apiSaveReq.open("GET", testUrl);
-    apiSaveReq.open("GET", prodUrl);
-    apiSaveReq.send();
+  var apiOwnerId = document.querySelector("#ownerId").value;
+  if (apiOwnerId == ""){
+    alert("Please provide a value for OwnerId.");
+    return;
+  }
+  var comicDatesJson = generateComicDateJson(apiOwnerId);
+
+  var prodUrl = apiTargetUrl + apiSaveDates;
+  console.log("calling API");
+  let formData = new FormData();
+  formData.append("comics", comicDatesJson);
+
+  fetch(prodUrl,{
+    method: 'POST',
+    body: formData,
+  })
+  .then( () => {
+    console.log("API Save Req succeeded.");
+    document.querySelector("#message").innerText = "Dates were successfully saved.";
+    startClearMessageTimer();
+  });
 }
 
 function resizeImage(){
