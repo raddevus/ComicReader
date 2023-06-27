@@ -28,6 +28,8 @@ const WUMO = "wumo";
 const WUMO_DATE_ID = "currentWumoDate";
 const BREWSTER = "brewster";
 const BREWSTER_DATE_ID = "currentBrewsterDate"
+const SHERM_LAGOON = "sherm";
+const SHERM_LAGOON_DATE_ID = "currentShermDate"
 
 var comicName = DILBERT;
 
@@ -279,6 +281,13 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
 
+  //7.
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentShermDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentShermDate");
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
   return JSON.stringify(allComicDates);
 }
 
@@ -358,6 +367,11 @@ function initApp(){
       initDate(BREWSTER_DATE_ID);
       break;
     }
+    case SHERM_LAGOON:{
+      document.querySelector("#shermRadio").checked = true;
+      initDate(SHERM_LAGOON_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -384,6 +398,9 @@ function initOriginalComicDates(){
   }
   if (localStorage.getItem(BREWSTER_DATE_ID) === null){
     localStorage.setItem(BREWSTER_DATE_ID, "2004-08-01");
+  }
+  if (localStorage.getItem(SHERM_LAGOON_DATE_ID) === null){
+    localStorage.setItem(SHERM_LAGOON_DATE_ID, "2022-05-01");
   }
 }
 
@@ -412,6 +429,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#brewsterRadio").checked){
       comicName = BREWSTER;
       initDate(BREWSTER_DATE_ID);
+    }
+    if (document.querySelector("#shermRadio").checked){
+      comicName = SHERM_LAGOON;
+      initDate(SHERM_LAGOON_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -482,6 +503,11 @@ function requestPage(){
       case BREWSTER:{
         targetUrl = 'https://www.gocomics.com/brewsterrockit/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentBrewsterDate", comicDate.yyyymmdd());
+        break;
+      }
+      case SHERM_LAGOON:{
+        targetUrl = 'https://www.gocomics.com/shermanslagoon/' + comicDate.yyyymmdd('/');
+        localStorage.setItem("currentShermDate", comicDate.yyyymmdd());
         break;
       }
     }
