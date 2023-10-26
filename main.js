@@ -30,6 +30,8 @@ const BREWSTER = "brewster";
 const BREWSTER_DATE_ID = "currentBrewsterDate"
 const SHERM_LAGOON = "sherm";
 const SHERM_LAGOON_DATE_ID = "currentShermDate"
+const BLOOM_COUNTY = "bloom";
+const BLOOM_COUNTY_DATE_ID = "currentBloomDate";
 
 var comicName = DILBERT;
 
@@ -288,6 +290,14 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
 
+  //8.
+  //BLOOM_COUNTY
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = "currentBloomDate";
+  ComicDateTemplate.DateString = localStorage.getItem("currentBloomDate");
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
   return JSON.stringify(allComicDates);
 }
 
@@ -372,6 +382,11 @@ function initApp(){
       initDate(SHERM_LAGOON_DATE_ID);
       break;
     }
+    case BLOOM_COUNTY:{
+      document.querySelector("#bloomCountyRadio").checked = true;
+      initDate(BLOOM_COUNTY_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -401,6 +416,9 @@ function initOriginalComicDates(){
   }
   if (localStorage.getItem(SHERM_LAGOON_DATE_ID) === null){
     localStorage.setItem(SHERM_LAGOON_DATE_ID, "2022-05-01");
+  }
+  if (localStorage.getItem(BLOOM_COUNTY_DATE_ID) === null){
+    localStorage.setItem(BLOOM_COUNTY_DATE_ID, "1980-12-07");
   }
 }
 
@@ -433,6 +451,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#shermRadio").checked){
       comicName = SHERM_LAGOON;
       initDate(SHERM_LAGOON_DATE_ID);
+    }
+    if (document.querySelector("#bloomCountyRadio").checked){
+      comicName = BLOOM_COUNTY;
+      initDate(BLOOM_COUNTY_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -508,6 +530,11 @@ function requestPage(){
       case SHERM_LAGOON:{
         targetUrl = 'https://www.gocomics.com/shermanslagoon/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentShermDate", comicDate.yyyymmdd());
+        break;
+      }
+      case BLOOM_COUNTY:{
+        targetUrl = 'https://www.gocomics.com/bloomcounty/' + comicDate.yyyymmdd('/');
+        localStorage.setItem("currentBloomDate", comicDate.yyyymmdd());
         break;
       }
     }
