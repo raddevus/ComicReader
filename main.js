@@ -32,6 +32,8 @@ const SHERM_LAGOON = "sherm";
 const SHERM_LAGOON_DATE_ID = "currentShermDate"
 const BLOOM_COUNTY = "bloom";
 const BLOOM_COUNTY_DATE_ID = "currentBloomDate";
+const ARGYLE_SWEATER = "argyle";
+const ARGYLE_SWEATER_DATE_ID = "currentArgyleDate";
 
 var comicName = DILBERT;
 
@@ -298,6 +300,14 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
 
+  //9.
+  //ARGYLE_SWEATER
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = ARGYLE_SWEATER_DATE_ID;
+  ComicDateTemplate.DateString = localStorage.getItem(ARGYLE_SWEATER_DATE_ID);
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
   return JSON.stringify(allComicDates);
 }
 
@@ -387,6 +397,11 @@ function initApp(){
       initDate(BLOOM_COUNTY_DATE_ID);
       break;
     }
+    case ARGYLE_SWEATER:{
+      document.querySelector("#argyleRadio").checked = true;
+      initDate(ARGYLE_SWEATER_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -419,6 +434,9 @@ function initOriginalComicDates(){
   }
   if (localStorage.getItem(BLOOM_COUNTY_DATE_ID) === null){
     localStorage.setItem(BLOOM_COUNTY_DATE_ID, "1980-12-07");
+  }
+  if (localStorage.getItem(ARGYLE_SWEATER_DATE_ID) === null){
+    localStorage.setItem(ARGYLE_SWEATER_DATE_ID, "2010-01-09");
   }
 }
 
@@ -455,6 +473,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#bloomCountyRadio").checked){
       comicName = BLOOM_COUNTY;
       initDate(BLOOM_COUNTY_DATE_ID);
+    }
+    if (document.querySelector("#argyleRadio").checked){
+      comicName = ARGYLE_SWEATER;
+      initDate(ARGYLE_SWEATER_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -535,6 +557,11 @@ function requestPage(){
       case BLOOM_COUNTY:{
         targetUrl = 'https://www.gocomics.com/bloomcounty/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentBloomDate", comicDate.yyyymmdd());
+        break;
+      }
+      case ARGYLE_SWEATER:{
+        targetUrl = 'https://www.gocomics.com/theargylesweater/' + comicDate.yyyymmdd('/');
+        localStorage.setItem(ARGYLE_SWEATER_DATE_ID, comicDate.yyyymmdd());
         break;
       }
     }
