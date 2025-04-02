@@ -165,33 +165,26 @@ function displayImage(){
   
   switch (comicName){
     case DILBERT:{
-      loadComicData(".img-comic", 'src=\"');
+      loadComicData("link[imageSrcSet]", 'imageSrcSet=\"');
       break;
     }
     default:{
       //PEARLS, GARFIELD, CALVIN & HOBBES, WUMO
-      loadComicData(".item-comic-image", 'src=\"');
+      loadComicData("link[imageSrcSet]", 'imageSrcSet=\"');
       break;
     }
   }
   document.querySelector("#targetImg").width = clientWidth - 10;
 }
 
-function loadComicData(comicSelector,searchText,urlPrefix){
-  if (urlPrefix === undefined || urlPrefix === null){
-    // insure urlPrefix is not undefined or null
-    urlPrefix = "";
-  }
+function loadComicData(comicSelector,searchText){
   document.querySelector("#hidden").innerHTML = globalPageData;
-  targetUrl = document.querySelector(comicSelector).outerHTML;
-  var beginIdx = targetUrl.search(searchText) + searchText.length;
-  targetUrl = targetUrl.substring(beginIdx,targetUrl.length);
-  console.log("targetUrl : " + targetUrl);
-  var endIdx = targetUrl.search("\"");
-  targetUrl = targetUrl.substring(0,endIdx);
-  console.log(targetUrl);
-  document.querySelector("#targetImg").src = urlPrefix + targetUrl;
-
+  
+  var allLinks = document.querySelectorAll(comicSelector);
+  targetUrl = allLinks[0].imageSrcset.split(",")[0].split("?")[0];
+  console.log(`targetUrl: ${targetUrl}`);
+ 
+  document.querySelector("#targetImg").src = targetUrl;
 }
 
 function getComicDatesFromApi(){
@@ -575,10 +568,9 @@ function requestPage(){
     var url = "https://newlibre.com/grabit/Home/getRemote"; //?url=' + targetUrl;
     console.log("requesting page");
 
-    fetch(url,{
-            method: 'POST',
-            body: comicData,
-        })
+    fetch(targetUrl,{
+            method: 'GET'
+     })
       .then(response => response.text())
       .then(data => {
         console.log(data);
