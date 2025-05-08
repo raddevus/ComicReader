@@ -165,23 +165,24 @@ function displayImage(){
   
   switch (comicName){
     case DILBERT:{
-      loadComicData("link[imageSrcSet]", 'imageSrcSet=\"');
+      loadComicData();
       break;
     }
     default:{
       //PEARLS, GARFIELD, CALVIN & HOBBES, WUMO
-      loadComicData("link[imageSrcSet]", 'imageSrcSet=\"');
+      loadComicData();
       break;
     }
   }
   document.querySelector("#targetImg").width = clientWidth - 10;
 }
 
-function loadComicData(comicSelector,searchText){
+function loadComicData(){
+  //2025-05-08 Had to change bec of web site changes no longer uses 
+   // old method of retrieving images - now stored in meta tag
   document.querySelector("#hidden").innerHTML = globalPageData;
-  
-  var allLinks = document.querySelectorAll(comicSelector);
-  targetUrl = allLinks[0].imageSrcset.split(",")[0].split("?")[0];
+  var metaTag = document.querySelector('meta[name="twitter:image"]'); 
+  targetUrl = metaTag.content;
   console.log(`targetUrl: ${targetUrl}`);
  
   document.querySelector("#targetImg").src = targetUrl;
