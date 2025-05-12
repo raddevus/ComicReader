@@ -16,8 +16,6 @@ var apiSaveFavs = "SaveAllComicFavorites";
 var favQueryString = "&favs=";
 var clientWidth = 0;
 var isDilbert = false;
-const DILBERT = "dilbert";
-const DILBERT_DATE_ID = "currentDate";
 const PEARLS = "pearls";
 const PEARLS_DATE_ID = "currentPearlsDate";
 const GARFIELD = "garfield";
@@ -34,8 +32,6 @@ const BLOOM_COUNTY = "bloom";
 const BLOOM_COUNTY_DATE_ID = "currentBloomDate";
 const ARGYLE_SWEATER = "argyle";
 const ARGYLE_SWEATER_DATE_ID = "currentArgyleDate";
-
-var comicName = DILBERT;
 
 
 oReq.addEventListener("error", transferFailed);
@@ -163,17 +159,7 @@ function loadDatesFromApiData(data){
 function displayImage(){
   var targetUrl = undefined;
   
-  switch (comicName){
-    case DILBERT:{
-      loadComicData();
-      break;
-    }
-    default:{
-      //PEARLS, GARFIELD, CALVIN & HOBBES, WUMO
-      loadComicData();
-      break;
-    }
-  }
+   loadComicData();
   document.querySelector("#targetImg").width = clientWidth - 10;
 }
 
@@ -347,15 +333,10 @@ function initApp(){
   initOriginalComicDates();
   comicName = localStorage.getItem("comicName");
   if (comicName === undefined || comicName === null){
-    // first time and it has never been initialized, set to dilbert
-    comicName = DILBERT;
+    // first time and it has never been initialized, set to pearls 
+    comicName = PEARLS;
   }
   switch (comicName){
-    case DILBERT:{
-      document.querySelector("#dilbertRadio").checked = true;
-      initDate(DILBERT_DATE_ID);
-      break;
-    }
     case PEARLS:{
       document.querySelector("#pearlsRadio").checked = true;
       initDate(PEARLS_DATE_ID);
@@ -405,9 +386,6 @@ function initOriginalComicDates(){
   // so user can begin reading first comic ever produced.  It only sets 
   // dates if hte user hasn't already saved them in localstorage
 
-  if (localStorage.getItem(DILBERT_DATE_ID) === null){
-    localStorage.setItem(DILBERT_DATE_ID, "1989-04-15");
-  }
   if (localStorage.getItem(PEARLS_DATE_ID) === null){
     localStorage.setItem(PEARLS_DATE_ID, "2002-01-06");
   }
@@ -436,10 +414,6 @@ function initOriginalComicDates(){
 
 function saveCurrentRadio(){
     console.log("saveCurrentRadio...");
-    if (document.querySelector("#dilbertRadio").checked){
-      comicName = DILBERT;
-      initDate(DILBERT_DATE_ID);
-    }
     if (document.querySelector("#pearlsRadio").checked){
       comicName = PEARLS;
       initDate(PEARLS_DATE_ID);
@@ -513,11 +487,6 @@ function requestPage(){
     comicDate.setDate(comicDate.getDate()+2);
     var targetUrl = null;
     switch (comicName){
-      case DILBERT:{
-        targetUrl = 'https://dilbert.com/strip/' + comicDate.yyyymmdd();
-        localStorage.setItem("currentDate", comicDate.yyyymmdd());
-        break;
-      }
       case PEARLS:{
         targetUrl = 'https://www.gocomics.com/pearlsbeforeswine/' + comicDate.yyyymmdd('/');
         localStorage.setItem("currentPearlsDate", comicDate.yyyymmdd());

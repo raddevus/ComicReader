@@ -13,9 +13,7 @@
 	</head>
 	<body onload="initApp()" onresize="resizeImage()">
         <input type="date" id="x-date" value="new Date()">
-        <input type="radio"  id="dilbertRadio" onchange="saveCurrentRadio()" name="radio-group" checked>
-        <label for="dilbertRadio">Dilbert</label>
-        <input type="radio" id="pearlsRadio" onchange="saveCurrentRadio()" name="radio-group">
+        <input type="radio" id="pearlsRadio" onchange="saveCurrentRadio()" name="radio-group" checked>
         <label for="pearlsRadio">Pearls</label>
         <input type="radio" id="garfieldRadio" onchange="saveCurrentRadio()" name="radio-group">
         <label for="garfieldRadio">Garfield</label>
@@ -35,10 +33,12 @@
         <p><a id="sourceUrl" href="" target="_blank"></a></p>
         <p><img id="targetImg"></p>
         <p>
+        <h3>Create Your OwnerId To Save Your Comic Dates</h3>
             <label for="ownerId">OwnerId</label>
-            <input id="ownerId" type="text" maxlength="30" size="7" >
-            <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
+            <input id="ownerId" type="text" maxlength="30" size="15" >
             <button id="saveComicDatesButton" onclick="saveComicDatesViaApi()" >Save Dates</button>
+            <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
+            <h3>Use Load Dates Button & Your OwnerId To Retrieve Saved Comic Dates</h3>
             <span id="message"></span>
         </p>
         <p>
