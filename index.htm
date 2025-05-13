@@ -12,6 +12,7 @@
         </style>
 	</head>
 	<body onload="initApp()" onresize="resizeImage()">
+      <h4>1. choose a comic 2. click [Next Comic] to read.</h4>
         <input type="date" id="x-date" value="new Date()">
         <input type="radio" id="pearlsRadio" onchange="saveCurrentRadio()" name="radio-group" checked>
         <label for="pearlsRadio">Pearls</label>
@@ -33,22 +34,24 @@
         <p><a id="sourceUrl" href="" target="_blank"></a></p>
         <p><img id="targetImg"></p>
         <p>
-        <h3>Create Your OwnerId To Save Your Comic Dates</h3>
+        <h3>Use [Load Dates] & Your OwnerId To Retrieve Saved Comic Dates</h3>
             <label for="ownerId">OwnerId</label>
             <input id="ownerId" type="text" maxlength="30" size="15" >
             <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
             <br>
             <input type="checkbox" id="hideOwnerWarning">
             <label for="hideOwnerWarning">Do not show warning about OwnerId</label>
-            <h3>Use Load Dates Button & Your OwnerId To Retrieve Saved Comic Dates</h3>
             <span id="message"></span>
         </p>
+
+            <h3>Type A Note & Click [Add Fav] To Save Favorite Comics</h3>
         <p>
             <label for="favorites">Favorites</label>
             <select id="favorites" onchange="updateFavNotes()">
                 <option value=""></option>
             </select>
             <br>
+            <p>Each comic will be added to the Favorites list so you can load them later.</p>
             <label for="favNotes">Fav Notes:</label>
             <input id="favNotes" type="text" size="30">
             <button id="addFavorite" onclick="addNewFavorite()">Add Fav</button>
