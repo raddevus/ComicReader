@@ -4,6 +4,7 @@ var apiSaveReq = new XMLHttpRequest();
 var apiSaveFavsReq = new XMLHttpRequest();
 var apiGetFavsReq = new XMLHttpRequest();
 var allFavs = [];
+var doNotShowOwnerIdWarning = null;
 
 let globalPageData;
 
@@ -43,6 +44,22 @@ apiSaveFavsReq.addEventListener("error", apiSaveFavsFailed);
 apiGetFavsReq.addEventListener("load",apiGetFavsComplete);
 apiGetFavsReq.addEventListener("error", apiGetFavsFailed);
 
+   //handleOwnerIdCheckboxChange);
+
+function loadOwnerIdWarning(){
+   doNotShowOwnerIdWarning = JSON.parse(localStorage.getItem("doNotShowOwnerIdWarning"));
+   console.log(`show warning? : ${doNotShowOwnerIdWarning}`);
+}
+
+function saveOwnerIdWarning(e){
+   doNotShowOwnerIdWarning = e.target.checked;
+   localStorage.setItem("doNotShowOwnerIdWarning", JSON.stringify(doNotShowOwnerIdWarning));
+   console.log(`show warning? : ${doNotShowOwnerIdWarning}`);
+}
+
+function handleOwnerIdCheckboxChange(e){
+   saveOwnerIdWarning(e);
+}
 
 function apiSaveReqComplete(evt){
     console.log("API Save Req succeeded.");
@@ -294,7 +311,9 @@ function generateComicDateJson(ownerId){
 function saveComicDatesViaApi(){
   var apiOwnerId = document.querySelector("#ownerId").value;
   if (apiOwnerId == ""){
-    alert("Please provide a value for OwnerId.");
+     if ( doNotShowOwnerIdWarning != true){ 
+      alert("If you want to save your progress, please provide an OwnerId.\nAny unique alphanumeric (no spaces) that you can remember for next time. (Can also be used to load your progress on another device).");
+     }
     return;
   }
   var comicDatesJson = generateComicDateJson(apiOwnerId);
@@ -325,10 +344,13 @@ function initClientSize(){
 }
 
 function initApp(){
+
+document.querySelector("#hideOwnerWarning").addEventListener("change", saveOwnerIdWarning); 
+   loadOwnerIdWarning();
+   document.querySelector("#hideOwnerWarning").checked = doNotShowOwnerIdWarning ;
   // have to add touch event on button otherwise the button does not work on mobile 
   // FYI - mobile includes amazon Silk browser found on TV and pads.
   document.querySelector("#loadComicDatesButton").addEventListener("touchstart",getComicDatesFromApi);
-  document.querySelector("#saveComicDatesButton").addEventListener("touchstart",saveComicDatesViaApi);
   initClientSize();
   initOriginalComicDates();
   comicName = localStorage.getItem("comicName");
@@ -547,6 +569,7 @@ function requestPage(){
         console.log("#### yep, it got it ####")
         globalPageData = data;
         displayImage();
+         saveComicDatesViaApi();
       });
     //oReq.open("GET", url);
     //oReq.send();

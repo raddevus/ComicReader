@@ -36,8 +36,10 @@
         <h3>Create Your OwnerId To Save Your Comic Dates</h3>
             <label for="ownerId">OwnerId</label>
             <input id="ownerId" type="text" maxlength="30" size="15" >
-            <button id="saveComicDatesButton" onclick="saveComicDatesViaApi()" >Save Dates</button>
             <button id="loadComicDatesButton" onclick="getComicDatesFromApi()" >Load Dates</button>
+            <br>
+            <input type="checkbox" id="hideOwnerWarning">
+            <label for="hideOwnerWarning">Do not show warning about OwnerId</label>
             <h3>Use Load Dates Button & Your OwnerId To Retrieve Saved Comic Dates</h3>
             <span id="message"></span>
         </p>
