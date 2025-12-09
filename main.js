@@ -33,7 +33,8 @@ const BLOOM_COUNTY = "bloom";
 const BLOOM_COUNTY_DATE_ID = "currentBloomDate";
 const ARGYLE_SWEATER = "argyle";
 const ARGYLE_SWEATER_DATE_ID = "currentArgyleDate";
-
+const OVER_HEDGE = "overHedge";
+const OVER_HEDGE_DATE_ID = "currentOverHedgeDate";
 
 oReq.addEventListener("error", transferFailed);
 apiReq.addEventListener("error", apiReqFailed);
@@ -305,6 +306,14 @@ function generateComicDateJson(ownerId){
   ComicDateTemplate.OwnerId = ownerId;
   allComicDates.push(ComicDateTemplate);
 
+  //10.
+  //OVER_HEDGE
+  ComicDateTemplate = {};
+  ComicDateTemplate.ComicDateName = OVER_HEDGE_DATE_ID;
+  ComicDateTemplate.DateString = localStorage.getItem(OVER_HEDGE_DATE_ID);
+  ComicDateTemplate.OwnerId = ownerId;
+  allComicDates.push(ComicDateTemplate);
+
   return JSON.stringify(allComicDates);
 }
 
@@ -399,6 +408,11 @@ document.querySelector("#hideOwnerWarning").addEventListener("change", saveOwner
       initDate(ARGYLE_SWEATER_DATE_ID);
       break;
     }
+    case OVER_HEDGE:{
+      document.querySelector("#overHedgeRadio").checked = true;
+      initDate(OVER_HEDGE_DATE_ID);
+      break;
+    }
   }
 }
 
@@ -431,6 +445,9 @@ function initOriginalComicDates(){
   }
   if (localStorage.getItem(ARGYLE_SWEATER_DATE_ID) === null){
     localStorage.setItem(ARGYLE_SWEATER_DATE_ID, "2010-01-09");
+  }
+  if (localStorage.getItem(OVER_HEDGE_DATE_ID) === null){
+    localStorage.setItem(OVER_HEDGE_DATE_ID, "2006-04-30");
   }
 }
 
@@ -467,6 +484,10 @@ function saveCurrentRadio(){
     if (document.querySelector("#argyleRadio").checked){
       comicName = ARGYLE_SWEATER;
       initDate(ARGYLE_SWEATER_DATE_ID);
+    }
+    if (document.querySelector("#overHedgeRadio").checked){
+      comicName = OVER_HEDGE;
+      initDate(OVER_HEDGE_DATE_ID);
     }
     localStorage.setItem("comicName", comicName);
 }
@@ -547,6 +568,11 @@ function requestPage(){
       case ARGYLE_SWEATER:{
         targetUrl = 'https://www.gocomics.com/theargylesweater/' + comicDate.yyyymmdd('/');
         localStorage.setItem(ARGYLE_SWEATER_DATE_ID, comicDate.yyyymmdd());
+        break;
+      }
+      case OVER_HEDGE:{
+        targetUrl = 'https://www.gocomics.com/overthehedge/' + comicDate.yyyymmdd('/');
+        localStorage.setItem(OVER_HEDGE_DATE_ID, comicDate.yyyymmdd());
         break;
       }
     }
